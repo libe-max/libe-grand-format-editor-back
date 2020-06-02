@@ -6,15 +6,24 @@ const logger = require('morgan')
 const mongo = require('mongodb')
 const SocketIo = require('socket.io')
 
-const {
-  handleJoinRoom,
-  handleChangeUsername,
-  handleRequestAllLongforms,
-  handleRequestLongform,
-  handlePostMessage,
-  handleLongformEdition,
-  handleDisconnect
-} = require('./ws-handlers/')
+const handleJoinRoom = require('./ws-handlers/handleJoinRoom')
+const handleChangeUsername = require('./ws-handlers/handleChangeUsername')
+const handleCreateNewLongform = require('./ws-handlers/handleCreateNewLongform')
+const handleRequestAllLongforms = require('./ws-handlers/handleRequestAllLongforms')
+const handleRequestLongform = require('./ws-handlers/handleRequestLongform')
+const handlePostMessage = require('./ws-handlers/handlePostMessage')
+const handleLongformEdition = require('./ws-handlers/handleLongformEdition')
+const handleDisconnect = require('./ws-handlers/handleDisconnect')
+
+// const {
+//   handleJoinRoom,
+//   handleChangeUsername,
+//   handleRequestAllLongforms,
+//   handleRequestLongform,
+//   handlePostMessage,
+//   handleLongformEdition,
+//   handleDisconnect
+// } = require('./ws-handlers/')
 
 const app = express()
 app.io = new SocketIo()
@@ -43,6 +52,7 @@ app.io.on('connection', socket => {
   socket.join('lobby')
   socket.on('JOIN ROOM', payload => handleJoinRoom(socket, app.io, payload))
   socket.on('CHANGE USERNAME', payload => handleChangeUsername(socket, app.io, payload))
+  socket.on('CREATE NEW LONGFORM', payload => handleCreateNewLongform(socket, app.io, payload))
   socket.on('REQUEST ALL LONGFORMS', payload => handleRequestAllLongforms(socket, app.io, payload))
   socket.on('REQUEST LONGFORM', payload => handleRequestLongform(socket, app.io, payload))
   socket.on('POST MESSAGE', payload => handlePostMessage(socket, app.io, payload))
