@@ -1,3 +1,5 @@
+const emitServerError = require('../ws-emiters/emitServerError')
+const emitNewLongform = require('../ws-emiters/emitNewLongform')
 const initLongformTemplate = {}
 
 function handleCreateNewLongform (socket, io, payload) {
@@ -5,8 +7,9 @@ function handleCreateNewLongform (socket, io, payload) {
   const { db } = io
   const collection = db.collection('longforms')
   const newLongform = { ...initLongformTemplate }
-  collection.insert(newLongform, (err, res) => {
-    console.log(res)
+  collection.insert(newLongform, (e, res) => {
+    if (e) emitServerError(socket, io, e.message)
+    else emitNewLongform(socket, io, { longform: res.ops[0] })
   })
 
 }
