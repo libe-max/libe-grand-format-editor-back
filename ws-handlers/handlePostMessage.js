@@ -9,7 +9,7 @@ function handlePostMessage (socket, io, payload) {
   })
   const { username, message } = payload
   const resPayload = { username, message }
-  emitNewMessage(socket, io, payload)
+  emitNewMessage(socket, io, resPayload)
 }
 
 module.exports = handlePostMessage

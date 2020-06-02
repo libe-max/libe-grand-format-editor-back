@@ -15,16 +15,6 @@ const handlePostMessage = require('./ws-handlers/handlePostMessage')
 const handleLongformEdition = require('./ws-handlers/handleLongformEdition')
 const handleDisconnect = require('./ws-handlers/handleDisconnect')
 
-// const {
-//   handleJoinRoom,
-//   handleChangeUsername,
-//   handleRequestAllLongforms,
-//   handleRequestLongform,
-//   handlePostMessage,
-//   handleLongformEdition,
-//   handleDisconnect
-// } = require('./ws-handlers/')
-
 const app = express()
 app.io = new SocketIo()
 
@@ -35,8 +25,7 @@ mongo.MongoClient.connect(dbUrl, {
   useUnifiedTopology: true
 }, (err, client) => {
   if (err) throw new Error(err)
-  db = client.db(dbName)
-  app.io.db = db
+  app.io.db = client.db(dbName)
 })
 
 app.use(logger('dev'))
@@ -68,10 +57,12 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
   res.status(err.status || 500)
-  res.json({ err: {
-    status: err.status,
-    message: err.message
-  }})
+  res.json({
+    err: {
+      status: err.status,
+      message: err.message
+    }
+  })
 })
 
 module.exports = app
