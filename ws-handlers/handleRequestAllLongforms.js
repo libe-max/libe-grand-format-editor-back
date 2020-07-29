@@ -11,7 +11,7 @@ function handleRequestAllLongforms (socket, io, payload) {
   const { db } = io
   const collection = db.collection('longforms')
   collection.find({}).toArray((e, longforms) => {
-    if (e) emitServerError(socket, io, e.message)
+    if (e) emitServerError(socket, io, { message: e.message })
     else emitAllLongforms(socket, io, { longforms })
   })
 }

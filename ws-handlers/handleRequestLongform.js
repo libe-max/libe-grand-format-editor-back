@@ -11,8 +11,10 @@ function handleRequestLongform (socket, io, payload) {
   })
   const { db } = io
   const collection = db.collection('longforms')
+  if (!ObjectId.isValid(payload.id)) return emitServerError(socket, io, { message: `${payload.id} is not a valid ID` })
   collection.find({ _id: ObjectId(payload.id) }).toArray((e, longforms) => {
-    if (e) emitServerError(socket, io, e.message)
+    if (e) emitServerError(socket, io, { message: e.message })
+    else if (!longforms.length) emitServerError(socket, io, { message: `Requested ID ${payload.id} does not match any entry in database` })
     else emitLongform(socket, io, { longform: longforms[0] })
   })
 }

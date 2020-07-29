@@ -35,6 +35,18 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.io.socket_username_joint = []
+app.io.getUsernameFromSocket = (socket) => {
+  console.log(app.io.socket_username_joint)
+  const joint = app.io.socket_username_joint.find(joint => joint.socket === socket)
+  if (!joint) return
+  else return joint.username
+}
+app.io.getSocketFromUsername = (username) => {
+  console.log(app.io.socket_username_joint)
+  const joint = app.io.socket_username_joint.find(joint => joint.username === username)
+  if (!joint) return
+  else return joint.socket
+}
 app.io.on('connection', socket => {
   console.log('==== CONNECT ====', socket.id)
   app.io.socket_username_joint.push({ username: undefined, socket })
